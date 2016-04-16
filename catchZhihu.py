@@ -4,6 +4,7 @@ import requests
 import sys
 import urllib
 import os
+import time
 reload(sys)
 sys.setdefaultencoding("utf-8")
 class Zhihu:
@@ -28,10 +29,11 @@ class Zhihu:
         return items
     #下载图片
     def downloadsImgs(self,img,i,count):
+        img_name=str(self.getNowDate()) + str(self.formatNum(i))+".jpg"
         print "正在下载:" + str(i) + "/"+str(count)
-        web = urllib.urlopen(img, str(i) + ".jpg")
+        web = urllib.urlopen(img, img_name)
         jpg = web.read();
-        file = open("imgs/"+str(i) + ".jpg", "wb")
+        file = open("imgs/" +img_name, "wb")
         file.write(jpg);
         file.close()
     #保存信息到zhihu.txt文件
@@ -42,6 +44,13 @@ class Zhihu:
             f.writelines(each['img']+'\n')
             f.writelines(each['link']+'\n')
         f.close()
+    def getNowDate(self):
+        return time.strftime("%Y%m%d", time.localtime(time.time()))
+    def formatNum(self,i):
+        if i<10:
+            return "0"+str(i)
+        else:
+            return i
 if __name__=="__main__":
     zhihu = Zhihu()
     if not os.path.exists("file"):
